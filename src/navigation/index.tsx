@@ -11,15 +11,16 @@ import newspaper from '../assets/newspaper.png';
 import { Home } from './screens/Home';
 import { Profile } from './screens/Profile';
 import { Settings } from './screens/Settings';
-import { Updates } from './screens/Updates';
+import { Login } from './screens/Login';
 import { NotFound } from './screens/NotFound';
+import { ProductDetail } from './screens/ProductDetail';
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Home: {
       screen: Home,
       options: {
-        title: 'Feed',
+        title: 'Main',
         tabBarIcon: ({ color, size }) => (
           <Image
             source={newspaper}
@@ -32,8 +33,8 @@ const HomeTabs = createBottomTabNavigator({
         ),
       },
     },
-    Updates: {
-      screen: Updates,
+    Profile: {
+      screen: Profile,
       options: {
         tabBarIcon: ({ color, size }) => (
           <Image
@@ -52,6 +53,13 @@ const HomeTabs = createBottomTabNavigator({
 
 const RootStack = createNativeStackNavigator({
   screens: {
+    Login: {
+      screen: Login,
+      options: {
+        headerShown: false,
+        gestureEnabled: false,
+      },
+    },
     HomeTabs: {
       screen: HomeTabs,
       options: {
@@ -70,6 +78,9 @@ const RootStack = createNativeStackNavigator({
           user: (value) => `@${value}`,
         },
       },
+    },
+    ProductDetail: {
+      screen: ProductDetail
     },
     Settings: {
       screen: Settings,
