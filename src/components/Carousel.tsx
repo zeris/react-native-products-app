@@ -1,73 +1,103 @@
-import { StaticScreenProps } from '@react-navigation/native';
-import { View, StyleSheet, Image, FlatList, Dimensions, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
-import { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, Dimensions, Image, FlatList, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { ImageViewer } from './ImageViewer';
 
 type Props = {
-   images: string[]
+  images: string[];
 }
+
 const { width } = Dimensions.get('window');
 
 export const Carousel = ({ images }: Props) => {
-   const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(0);
+  const [viewerVisible, setViewerVisible] = useState(false);
+  const flatListRef = useRef<FlatList>(null);
 
-   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-      const index = Math.round(event.nativeEvent.contentOffset.x / width);
-      setIndex(index);
-   };
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const newIndex = Math.round(event.nativeEvent.contentOffset.x / width);
+    setIndex(newIndex);
+  };
 
+  const scrollToImage = (imageIndex: number) => {
+    flatListRef.current?.scrollToOffset({
+      offset: width * imageIndex,
+      animated: true
+    });
+  };
 
-   return (
-   <View>
-      <FlatList 
-         data={images}
-         style={styles.carousel}
-         renderItem={({item}) => (
-            <Image source={{ uri: item }} style={styles.image} />
-         )}
-         horizontal
-         pagingEnabled
-         keyExtractor={(item, index) => index.toString()}
-         showsHorizontalScrollIndicator={false}
-         scrollEventThrottle={5}
-         onScroll={handleScroll}
-         onMomentumScrollEnd={(e) => {
-            const newIndex = Math.round(e.nativeEvent.contentOffset.x / width);
-            setIndex(newIndex);
-         }}
-      />
-      <View style={styles.dots}>
-         {images.map((_, i) => (
-            <View
-            key={i}
-            style={[styles.dot, { opacity: i === index ? 1 : 0.3 }]}
+  return (
+    <View style={styles.container}>
+      <FlatList
+        ref={flatListRef}
+        data={images}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        renderItem={({ item }) => (
+          <TouchableOpacity 
+            activeOpacity={0.9}
+            onPress={() => setViewerVisible(true)}
+          >
+            <Image 
+              source={{ uri: item }} 
+              style={styles.image}
+              resizeMode="cover"
             />
-         ))}
+          </TouchableOpacity>
+        )}
+        keyExtractor={(_, idx) => idx.toString()}
+      />
+
+      <View style={styles.pagination}>
+        {images.map((_, i) => (
+          <TouchableOpacity
+            key={i}
+            onPress={() => scrollToImage(i)}
+          >
+            <View style={[
+              styles.dot,
+              i === index && styles.dotActive
+            ]} />
+          </TouchableOpacity>
+        ))}
       </View>
-   </View>
-   );
-}
+
+      <ImageViewer
+        isVisible={viewerVisible}
+        imageUrl={images[index]}
+        onClose={() => setViewerVisible(false)}
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  carousel: {
-   height: '84%',
-   width: 'auto',
-   backgroundColor: '#ffffff',
+  container: {
+    height: '100%',
+    backgroundColor: '#000',
   },
   image: {
-   width,
-   height: 'auto',
-   resizeMode: 'contain',
+    width,
+    height: '100%',
   },
-  dots: {
+  pagination: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 8,
+    position: 'absolute',
+    bottom: 15,
+    alignSelf: 'center',
   },
   dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#333',
+    backgroundColor: '#fff',
     marginHorizontal: 4,
+    opacity: 0.5,
+  },
+  dotActive: {
+    opacity: 1,
+    transform: [{ scale: 1.2 }],
   },
 });
