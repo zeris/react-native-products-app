@@ -69,14 +69,8 @@ const RootStack = createNativeStackNavigator({
     },
     Profile: {
       screen: Profile,
-      linking: {
-        path: ':user(@[a-zA-Z0-9-_]+)',
-        parse: {
-          user: (value) => value.replace(/^@/, ''),
-        },
-        stringify: {
-          user: (value) => `@${value}`,
-        },
+      options: {
+        headerShown: false,
       },
     },
     ProductDetail: {

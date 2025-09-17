@@ -4,11 +4,15 @@ import AuthServices from '../../services/auth.services';
 import { useState, useEffect } from 'react';
 import SecureStorage from '../../implementations/secureStorage';
 import { useNavigation } from '@react-navigation/native';
+import { useUser } from '../../context/userContext'; 
+import { User } from '../../interfaces/User';
+import { LoginResponse } from '../../interfaces/Auth';
 
 export function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation<any>();
+  const { setUser } = useUser();
 
   const handleAutoLogin = async () => {
     let token;
@@ -36,13 +40,21 @@ export function Login() {
     }
   }
 
+  const handleSaveUser = (userData: User) => {
+    try {
+      setUser(userData);
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+
   const onLogin = async () => {
     try {
       const response = await AuthServices.Login ({ username: username, password: password });
-      console.log(response, 'response login');
       if(response) {
-        const a = await SecureStorage.set('accessToken', response.accessToken);
-        console.log(a, 'set token');
+        await SecureStorage.set('accessToken', response.accessToken);
+        await handleSaveUser({...response})
         navigation.navigate('HomeTabs');
         return;
       }
