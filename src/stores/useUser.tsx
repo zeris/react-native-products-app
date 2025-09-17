@@ -45,10 +45,30 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
     }
   };
 
+  const changePreferences = async (preferences: Partial<User['preferences']>) => {
+    try {
+      if (user) {
+        const updatedUser = {
+          ...user,
+          preferences: {
+            theme: user.preferences?.theme || 'system' as const,
+            ...user.preferences,
+            ...preferences
+          }
+        };
+        await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
+        setUserState(updatedUser);
+      }
+    } catch (error) {
+      console.error('Error updating preferences:', error);
+    }
+  };
+
   const value: UserContextType = {
     user,
     setUser,
     clearUser,
+    changePreferences
   };
 
   return (

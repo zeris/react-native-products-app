@@ -6,4 +6,7 @@ export interface User {
   lastName: string;
   gender: string;
   image: string;
+  preferences : {
+    theme?: 'light' | 'dark' | 'system'
+  }
 }

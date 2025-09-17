@@ -6,39 +6,12 @@ import SecureStorage from '../../implementations/secureStorage';
 import { useNavigation } from '@react-navigation/native';
 import { useUser } from '../../context/userContext'; 
 import { User } from '../../interfaces/User';
-import { LoginResponse } from '../../interfaces/Auth';
 
 export function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation<any>();
   const { setUser } = useUser();
-
-  const handleAutoLogin = async () => {
-    let token;
-    try {
-      token = await SecureStorage.get('accessToken');
-      if (typeof token !== 'string' || !token) {
-        return;
-      }
-    }
-    catch (e) {
-      console.log(e);
-      return;
-    }
-    
-    try {
-      const response = await AuthServices.getAuthUser(token);
-      if (response) {
-        navigation.navigate('HomeTabs');
-        return;
-      }
-    }
-    catch (e) {
-      console.log(e);
-      return
-    }
-  }
 
   const handleSaveUser = (userData: User) => {
     try {
@@ -54,7 +27,12 @@ export function Login() {
       const response = await AuthServices.Login ({ username: username, password: password });
       if(response) {
         await SecureStorage.set('accessToken', response.accessToken);
-        await handleSaveUser({...response})
+        handleSaveUser({
+          ...response,
+          preferences: {
+            theme: undefined
+          }
+        })
         navigation.navigate('HomeTabs');
         return;
       }
@@ -63,10 +41,6 @@ export function Login() {
       console.log(e);
     }
   }
-
-  useEffect(() => {
-    handleAutoLogin();
-  }, [])
 
   return (
     <View style={styles.container}>

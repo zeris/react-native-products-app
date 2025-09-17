@@ -9,4 +9,5 @@ export interface UserContextType {
   user: User | null;
   setUser: (user: User | null) => void;
   clearUser: () => void;
+  changePreferences: (preferences: Partial<User['preferences']>) => void;
 }

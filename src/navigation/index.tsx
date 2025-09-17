@@ -14,6 +14,7 @@ import { Settings } from './screens/Settings';
 import { Login } from './screens/Login';
 import { NotFound } from './screens/NotFound';
 import { ProductDetail } from './screens/ProductDetail';
+import { EditProfile } from './screens/EditProfile';
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
@@ -72,6 +73,9 @@ const RootStack = createNativeStackNavigator({
       options: {
         headerShown: false,
       },
+    },
+    EditProfile: {
+      screen: EditProfile,
     },
     ProductDetail: {
       screen: ProductDetail
