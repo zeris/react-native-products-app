@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, StyleSheet, Dimensions, Image, FlatList, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { useTheme } from '@react-navigation/native';
 import { ImageViewer } from './ImageViewer';
 
 type Props = {
@@ -25,8 +26,10 @@ export const Carousel = ({ images }: Props) => {
     });
   };
 
+  const { colors } = useTheme();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container] }>
       <FlatList
         ref={flatListRef}
         data={images}
@@ -50,7 +53,7 @@ export const Carousel = ({ images }: Props) => {
         keyExtractor={(_, idx) => idx.toString()}
       />
 
-      <View style={styles.pagination}>
+      <View style={styles.pagination} pointerEvents="box-none">
         {images.map((_, i) => (
           <TouchableOpacity
             key={i}
@@ -58,6 +61,7 @@ export const Carousel = ({ images }: Props) => {
           >
             <View style={[
               styles.dot,
+              { backgroundColor: i === index ? colors.primary : colors.text },
               i === index && styles.dotActive
             ]} />
           </TouchableOpacity>
@@ -76,7 +80,7 @@ export const Carousel = ({ images }: Props) => {
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: '#000',
+    backgroundColor: '#fff'
   },
   image: {
     width,

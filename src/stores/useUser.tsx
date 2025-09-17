@@ -47,17 +47,21 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
 
   const changePreferences = async (preferences: Partial<User['preferences']>) => {
     try {
+      console.log('[useUser] changePreferences called with', preferences);
       if (user) {
         const updatedUser = {
           ...user,
           preferences: {
-            theme: user.preferences?.theme || 'system' as const,
-            ...user.preferences,
-            ...preferences
+            // base on previous preferences then overlay new
+            ...(user.preferences || { theme: 'system' }),
+            ...preferences,
           }
         };
         await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(updatedUser));
         setUserState(updatedUser);
+        console.log('[useUser] preferences updated', updatedUser.preferences);
+      } else {
+        console.warn('[useUser] changePreferences called but no user in state');
       }
     } catch (error) {
       console.error('Error updating preferences:', error);

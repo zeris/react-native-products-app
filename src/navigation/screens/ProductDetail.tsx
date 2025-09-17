@@ -1,4 +1,4 @@
-import { StaticScreenProps } from '@react-navigation/native';
+import { StaticScreenProps, useTheme } from '@react-navigation/native';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { useProducts } from '../../stores/useProducts';
 import { Carousel } from '../../components/Carousel';
@@ -44,29 +44,31 @@ export function ProductDetail({ route }: Props) {
     };
   });
 
+  const { colors } = useTheme();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Carousel Section - Fixed position */}
-      <View style={styles.carouselSection}>
-        <Text style={styles.productTitle}>{product?.title}</Text>
-        <Text style={styles.productSku}>SKU: {product?.sku}</Text>
+      <View style={[styles.carouselSection, { backgroundColor: colors.background }] }>
+        <Text style={[styles.productTitle, { color: colors.text }]}>{product?.title}</Text>
+        <Text style={[styles.productSku, { color: colors.text }]}>SKU: {product?.sku}</Text>
         <Carousel images={product?.images ?? []} />
       </View>
 
       {/* Info Card Section - Animated */}
       <GestureDetector gesture={gesture}>
-        <Animated.View style={[styles.infoCard, animatedStyle]}>
+        <Animated.View style={[styles.infoCard, { backgroundColor: colors.background }, animatedStyle]}>
         <View style={styles.priceSection}>
-          <Text style={styles.price}>${product?.price}</Text>
-          <Text style={styles.stock}>
-            Stock: <Text style={styles.stockValue}>{product?.stock}</Text>
+          <Text style={[styles.price, { color: colors.text }]}>${product?.price}</Text>
+          <Text style={[styles.stock, { color: colors.text }]}> 
+            Stock: <Text style={[styles.stockValue]}>{product?.stock}</Text>
           </Text>
         </View>
 
         <View style={styles.descriptionSection}>
-          <Text style={styles.sectionTitle}>Description</Text>
-          <View style={styles.infoBox}>
-            <Text style={styles.description}>{product?.description}</Text>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>Description</Text>
+          <View style={[styles.infoBox, { backgroundColor: colors.background === '#000' ? '#111' : colors.card }]}>
+            <Text style={[styles.description, { color: colors.text }]}>{product?.description}</Text>
             
             <View style={styles.productMetadata}>
               <View style={styles.metadataItem}>
@@ -104,7 +106,6 @@ const styles = StyleSheet.create({
   productTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
     paddingHorizontal: 16,
     paddingTop: 16,
   },

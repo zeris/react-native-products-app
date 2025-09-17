@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import { Product } from '../interfaces/Product';
 
 type Props = {
@@ -8,10 +8,11 @@ type Props = {
 
 export const ProductCard = ({ product }: Props) => {
    const navigation = useNavigation<any>();
+   const { colors } = useTheme();
 
    return (
-      <TouchableOpacity
-         style={styles.card}
+   <TouchableOpacity
+      style={[styles.card, { backgroundColor: colors.card }]}
          onPress={() => navigation.navigate('ProductDetail', { productId: product.id })}
          activeOpacity={0.8}
       >
@@ -19,8 +20,8 @@ export const ProductCard = ({ product }: Props) => {
             <Image source={{ uri: product.thumbnail }} style={styles.image} />
          </View>
          <View style={styles.cardContent}>
-            <Text style={{ fontWeight: 'bold', fontSize: 14 }} ellipsizeMode='tail' numberOfLines={1}>{product.title}</Text>
-            <Text style={{ textAlign: 'right', fontSize: 22 }}>${product.price}</Text>
+            <Text style={[{ fontWeight: 'bold', fontSize: 14, color: colors.text }]} ellipsizeMode='tail' numberOfLines={1}>{product.title}</Text>
+            <Text style={[{ textAlign: 'right', fontSize: 22, color: colors.text } ]}>${product.price}</Text>
          </View>
       </TouchableOpacity>
    );
