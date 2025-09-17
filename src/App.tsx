@@ -7,6 +7,7 @@ import * as React from 'react';
 import { useColorScheme } from 'react-native';
 import { Navigation } from './navigation';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { UserProvider } from './stores/useUser';
 
 Asset.loadAsync([
   ...NavigationAssets,
@@ -25,16 +26,18 @@ export function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Navigation
-        theme={theme}
-        linking={{
-          enabled: 'auto',
-          prefixes: [prefix],
-        }}
-        onReady={() => {
-          SplashScreen.hideAsync();
-        }}
-      />
+      <UserProvider>
+        <Navigation
+          theme={theme}
+          linking={{
+            enabled: 'auto',
+            prefixes: [prefix],
+          }}
+          onReady={() => {
+            SplashScreen.hideAsync();
+          }}
+        />
+      </UserProvider>
     </GestureHandlerRootView>
   );
 }
