@@ -3,10 +3,10 @@
     "name": "products-app",
     "slug": "products-app",
     "version": "1.0.0",
-    "orientation": "default",
-    "icon": "./assets/icon.png",
+    "orientation": "portrait",
+    "icon": "./assets/softtek_logo.png",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
+    "newArchEnabled": false,
     "scheme": "productsapp",
     "ios": {
       "supportsTablet": true,
@@ -28,7 +28,7 @@
         "expo-splash-screen",
         {
           "backgroundColor": "#ffffff",
-          "image": "./assets/splash-icon.png"
+          "image": "./assets/softtek_logo.png"
         }
       ],
       "react-native-edge-to-edge",

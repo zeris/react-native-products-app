@@ -6,43 +6,26 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useCallback, useEffect, useState } from 'react';
 import { UserProvider } from './stores/useUser';
 import { Navigation } from './navigation';
-import { useAutoLogin } from './hooks/useAutoLogin';
 
 // Prevenir auto hide del splash nativo
 SplashScreen.preventAutoHideAsync();
 
-// Runner que se monta dentro del UserProvider y ejecuta el auto-login
+// Runner que se monta dentro del UserProvider y espera el timeout del splash
 function AutoLoginRunner({ onDone }: { onDone: () => void }) {
-  const { handleAutoLogin } = useAutoLogin();
-
   useEffect(() => {
     let mounted = true;
-    // timeout fallback por si algo cuelga (7s)
     const t = setTimeout(() => {
       if (mounted) {
         console.warn('[AutoLoginRunner] timeout, continuing');
         onDone();
       }
-    }, 7000);
-
-    (async () => {
-      try {
-        console.log('[AutoLoginRunner] starting');
-        const ok = await handleAutoLogin();
-        console.log('[AutoLoginRunner] result:', ok);
-      } catch (e) {
-        console.warn('[AutoLoginRunner] error:', e);
-      } finally {
-        clearTimeout(t);
-        if (mounted) onDone();
-      }
-    })();
+    }, 3000);
 
     return () => {
       mounted = false;
       clearTimeout(t);
     };
-  }, [handleAutoLogin, onDone]);
+  }, [onDone]);
 
   return null;
 }
