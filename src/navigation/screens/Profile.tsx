@@ -1,15 +1,15 @@
-import { Text } from '@react-navigation/elements';
-import { StaticScreenProps } from '@react-navigation/native';
+import { Text, Button } from '@react-navigation/elements';
 import { StyleSheet, View } from 'react-native';
+import { useUser } from '../../context/userContext';
 
-type Props = StaticScreenProps<{
-  user: string;
-}>;
 
-export function Profile({ route }: Props) {
+export function Profile() {
+  const { user } = useUser();
   return (
     <View style={styles.container}>
-      <Text>{route.params.user}'s Profile</Text>
+      <Text>{user?.username}'s Profile</Text>
+      <Button screen='EditProfile'>Edit Profile</Button>
+      <Button screen='Settings'>Settings</Button>
     </View>
   );
 }

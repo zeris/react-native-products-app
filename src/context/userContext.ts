@@ -1,11 +1,11 @@
-import { createContext,  useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { UserContextType } from '../interfaces/Context';
-
 
 export const UserContext = createContext<UserContextType>({
   user: null,
   setUser: () => null,
   clearUser: () => null,
+  changePreferences: () => null, // Agregamos la función faltante
 });
 
 export const useUser = () => {
